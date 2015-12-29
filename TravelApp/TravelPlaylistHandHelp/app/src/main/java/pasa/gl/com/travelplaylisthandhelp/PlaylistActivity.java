@@ -8,16 +8,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class PlaylistActivity extends AppCompatActivity {
 
     // TravelApp database
-    Database database;
+    private Database database = new Database();
+
+    private ListView list;
+
+    private PlaylistAdapter adapter;
+    private ArrayList<Multimedia> ListViewValueArr = new ArrayList<Multimedia>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_playlist_hand_help);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -30,10 +41,23 @@ public class PlaylistActivity extends AppCompatActivity {
             }
         });
 
-        // Init Database
-        database.init();
+        // Our code
+        updateMultimedias();
+        list = (ListView)findViewById(R.id.list);
+        adapter = new PlaylistAdapter(this, ListViewValueArr, getResources());
+        list.setAdapter(adapter);
+    }
 
+    private void updateMultimedias() {
+        ListViewValueArr.clear();
 
+        Multimedia[] multimedias = database.getMultimedias();
+        for (Multimedia multimedia : multimedias) {
+            ListViewValueArr.add(multimedia);
+        }
+
+        // TODO notify adapter
+        // adapter.notify();
     }
 
     @Override
