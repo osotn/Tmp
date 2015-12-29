@@ -50,7 +50,7 @@ public class Database {
                 URI.create(""),
                 42*60 + 18,
                 "Criminal Minds",
-                "2 sesson 1");
+                "2 season 1");
         multimedias[3] = new Multimedia(
                 Multimedia.MultimediaType.MUSIC,
                 URI.create(""),
@@ -68,13 +68,13 @@ public class Database {
                 URI.create(""),
                 43*60 + 35,
                 "Criminal Minds",
-                "2 Session 2");
+                "2 season 2");
         multimedias[6] = new Multimedia(
                 Multimedia.MultimediaType.MOVIE,
                 URI.create(""),
                 42*60 + 53,
                 "Criminal Minds",
-                "2 Session 3");
+                "2 season 3");
         multimedias[7] = new Multimedia(
                 Multimedia.MultimediaType.MUSIC,
                 URI.create(""),
