@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class PlaylistActivity extends AppCompatActivity {
+
+    private final String TAG = "PlaylistActivity";
 
     // TravelApp database
     private Database database = new Database();
@@ -38,14 +41,26 @@ public class PlaylistActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
             }
         });
 
         // Our code
         updateMultimedias();
-        list = (ListView)findViewById(R.id.list);
+        list = (ListView) findViewById(R.id.list);
         adapter = new PlaylistAdapter(this, ListViewValueArr, getResources());
+        adapter.setPlayingPosition(database.curMultimedia());
         list.setAdapter(adapter);
+
+        list.post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+                setListCurrentPosition(database.curMultimedia());
+            }
+        });
+
+
     }
 
     private void updateMultimedias() {
@@ -56,8 +71,16 @@ public class PlaylistActivity extends AppCompatActivity {
             ListViewValueArr.add(multimedia);
         }
 
-        // TODO notify adapter
-        // adapter.notify();
+        adapter.notifyDataSetChanged();
+    }
+
+    private void setListCurrentPosition(int current_position) {
+        int height = list.getHeight();
+        int itemHeight = list.getChildAt(0).getHeight();
+        Log.d(TAG, "First Visible Position =" +list.getFirstVisiblePosition());
+        Log.d(TAG, "Last Visible Position =" +list.getLastVisiblePosition());
+        Log.d(TAG, "height =" +height);
+        list.setSelectionFromTop(current_position, height/2 - itemHeight/2);
     }
 
     @Override

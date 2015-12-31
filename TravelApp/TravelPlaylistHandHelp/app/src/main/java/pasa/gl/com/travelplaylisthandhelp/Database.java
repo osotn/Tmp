@@ -26,13 +26,18 @@ public class Database {
         return points;
     }
 
+    public int curMultimedia() {
+        // TEST Only
+        return 10;
+    }
+
     public Multimedia[] getMultimedias() {
 
         // TODO Get from Database;
 
 
         // TEST only
-        Multimedia[] multimedias = new Multimedia[8];
+        Multimedia[] multimedias = new Multimedia[16];
         multimedias[0] = new Multimedia(
                 Multimedia.MultimediaType.MUSIC,
                 URI.create(""),
@@ -76,6 +81,55 @@ public class Database {
                 "Criminal Minds",
                 "2 season 3");
         multimedias[7] = new Multimedia(
+                Multimedia.MultimediaType.MUSIC,
+                URI.create(""),
+                2*60 + 57,
+                "Shout",
+                "Bla-bla");
+
+        multimedias[8] = new Multimedia(
+                Multimedia.MultimediaType.MUSIC,
+                URI.create(""),
+                2*60 + 56,
+                "I'm a Rock",
+                "Simon and Garfunkel");
+        multimedias[9] = new Multimedia(
+                Multimedia.MultimediaType.MUSIC,
+                URI.create(""),
+                3*60 + 1,
+                "Don't Sing",
+                "Data");
+        multimedias[10] = new Multimedia(
+                Multimedia.MultimediaType.MOVIE,
+                URI.create(""),
+                42*60 + 18,
+                "Criminal Minds",
+                "2 season 1");
+        multimedias[11] = new Multimedia(
+                Multimedia.MultimediaType.MUSIC,
+                URI.create(""),
+                2*60 + 49,
+                "Monster Man",
+                "Iggy Pop");
+        multimedias[12] = new Multimedia(
+                Multimedia.MultimediaType.MUSIC,
+                URI.create(""),
+                2*60 + 45,
+                "Passenger",
+                "Iggy Pop");
+        multimedias[13] = new Multimedia(
+                Multimedia.MultimediaType.MOVIE,
+                URI.create(""),
+                43*60 + 35,
+                "Criminal Minds",
+                "2 season 2");
+        multimedias[14] = new Multimedia(
+                Multimedia.MultimediaType.MOVIE,
+                URI.create(""),
+                42*60 + 53,
+                "Criminal Minds",
+                "2 season 3");
+        multimedias[15] = new Multimedia(
                 Multimedia.MultimediaType.MUSIC,
                 URI.create(""),
                 2*60 + 57,
