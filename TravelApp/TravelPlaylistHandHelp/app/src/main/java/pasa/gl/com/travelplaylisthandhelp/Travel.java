@@ -7,7 +7,6 @@ package pasa.gl.com.travelplaylisthandhelp;
 public class Travel {
     private String mName;
     private User[] mUsers;
-    private Car mCar;
 
     public Travel(String name) {
         mName = name;

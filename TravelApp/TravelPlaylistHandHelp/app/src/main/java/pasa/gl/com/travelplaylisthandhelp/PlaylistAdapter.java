@@ -26,19 +26,19 @@ public class PlaylistAdapter extends BaseAdapter {
     private ArrayList data;
     private static LayoutInflater inflater = null;
     public Resources res;
-
-    private int playing_position = -1;
-
-    public void setPlayingPosition(int pos) {
-        playing_position = pos;
-    }
+    private CurrentMultimedia curMultimedia = null;
 
     public PlaylistAdapter(Activity a, ArrayList d, Resources resLocal) {
         activity = a;
         data = d;
         res = resLocal;
 
+
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void setCurrentMultimedia(CurrentMultimedia current) {
+        curMultimedia = current;
     }
 
     public int getCount() {
@@ -102,13 +102,20 @@ public class PlaylistAdapter extends BaseAdapter {
 
             holder.image2.setImageResource(isPlaying);
 
-            if (position <= (playing_position-1)) {
+            int current_position = -1;
+            int remain_sec = 0;
+            if (curMultimedia != null) {
+                current_position = curMultimedia.getPosition();
+                remain_sec = curMultimedia.getRemain();
+            }
+
+            if (position <= (current_position-1)) {
 
                 Log.d(TAG, "getView() set grey");
                 holder.list_item.setBackgroundColor(0xFFD3D3D3);
                 holder.gradient_pad.setBackgroundColor(0xFFD3D3D3);
 
-                if (position == (playing_position-1)) {
+                if (position == (curMultimedia.getPosition()-1)) {
                     Log.d(TAG, "getView() set gradient");
                     holder.gradient_pad.setBackgroundResource(res.getIdentifier(
                             "pasa.gl.com.travelplaylisthandhelp:drawable/gradient_drawable_grey", null, null));
@@ -120,29 +127,31 @@ public class PlaylistAdapter extends BaseAdapter {
                 holder.gradient_pad.setBackgroundColor(0xFFFFFFFF);
             }
 
-            if (position == playing_position) {
+            if (position == current_position) {
 
                 holder.image2.setVisibility(View.VISIBLE);
                 holder.text.setTextColor(0xFF03a9f4);
                 holder.text1.setTextColor(0xFF03a9f4);
 
-                int height = (vi == null) ? 0 : vi.getHeight();
-                int list_height = ((ListView) parent).getHeight();
-                //((ListView) parent).setSelectionFromTop(position, list_height/2 - height/2);
+                String s = String.format("-%d:%02d", remain_sec / 60, remain_sec % 60);
+                holder.text2.setText(s);
 
             } else {
                 holder.text.setTextColor(0xFF000000);
                 holder.text1.setTextColor(0xFF767676);
                 holder.image2.setVisibility(View.GONE);
+
+                String s = String.format("%d:%02d", tempValues.getDuration() / 60,
+                        tempValues.getDuration() % 60);
+                holder.text2.setText(s);
             }
 
 
 
             holder.text.setText(tempValues.getSong());
             holder.text1.setText(tempValues.getArtist());
-            String s = String.format("%d:%02d", tempValues.getDuration() / 60,
-                    tempValues.getDuration() % 60);
-            holder.text2.setText(s);
+
+
             holder.image.setImageResource(
                     tempValues.getType() == Multimedia.MultimediaType.MUSIC ? idAudio : idMovie);
         }

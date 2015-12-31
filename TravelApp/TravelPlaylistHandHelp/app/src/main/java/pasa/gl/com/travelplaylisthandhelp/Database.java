@@ -1,42 +1,31 @@
 // TODO Rename package name
 package pasa.gl.com.travelplaylisthandhelp;
 
+import android.util.Log;
+
 import java.net.URI;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 /**
  * Created by oleksandr.v.sotnikov on 12/25/2015.
  */
 public class Database {
+    private final String TAG = "Database";
+    private Firebase mFirebaseRef;
+    private CurrentMultimedia currentMultimedia = null;
+    private Multimedia[] multimediaList = null;
+
     // TODO Implement as Singletone. We need only one database for TravelApp
 
-
-    public Travel createTravel(String name) {
-        Travel travel = new Travel(name);
-        // TODO Add in database.
-        return travel;
-    }
-
-    public MapPoint[] getPoints() {
-
-        // TODO Get from Database;
-
-        // TEST Only
-        MapPoint[] points = new MapPoint[10];
-
-        return points;
-    }
-
-    public int curMultimedia() {
-        // TEST Only
-        return 10;
-    }
-
-    public Multimedia[] getMultimedias() {
-
-        // TODO Get from Database;
+    public Database() {
+        mFirebaseRef = new Firebase(
+                "https://travelapppasa.firebaseio.com/").child("Travels").child("TestTravel");
 
 
-        // TEST only
+/*
         Multimedia[] multimedias = new Multimedia[16];
         multimedias[0] = new Multimedia(
                 Multimedia.MultimediaType.MUSIC,
@@ -136,6 +125,48 @@ public class Database {
                 "Shout",
                 "Bla-bla");
 
-        return multimedias;
+        mFirebaseRef.child("MultimediaList").setValue(multimedias);
+*/
+        CurrentMultimedia cur = new CurrentMultimedia(10, 1*60+49);
+
+        mFirebaseRef.child("CurrentMultimedia").setValue(cur);
+
+
+
+        mFirebaseRef.child("CurrentMultimedia").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "Firebase - onDataChange()");
+
+                currentMultimedia = dataSnapshot.getValue(CurrentMultimedia.class);
+                // Update.
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+
+        mFirebaseRef.child("MultimediaList").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "Firebase - onDataChange()");
+
+                //multimediaList = dataSnapshot.getValue(Multimedia[].class);
+                // Update.
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+    }
+
+    public CurrentMultimedia getCurrentMultimedia() {
+        return currentMultimedia;
+    }
+
+    public Multimedia[] getMultimediaList() {
+        return multimediaList;
     }
 }

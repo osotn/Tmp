@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.firebase.client.Firebase;
+
 import java.util.ArrayList;
 
 public class PlaylistActivity extends AppCompatActivity {
@@ -18,11 +20,11 @@ public class PlaylistActivity extends AppCompatActivity {
     private final String TAG = "PlaylistActivity";
 
     // TravelApp database
-    private Database database = new Database();
+    private Database database = null;
 
     private ListView list;
 
-    private PlaylistAdapter adapter;
+    private PlaylistAdapter adapter = null;
     private ArrayList<Multimedia> ListViewValueArr = new ArrayList<Multimedia>();
 
     @Override
@@ -46,41 +48,38 @@ public class PlaylistActivity extends AppCompatActivity {
         });
 
         // Our code
-        updateMultimedias();
+        Firebase.setAndroidContext(this);
+        database = new Database();
+
         list = (ListView) findViewById(R.id.list);
         adapter = new PlaylistAdapter(this, ListViewValueArr, getResources());
-        adapter.setPlayingPosition(database.curMultimedia());
         list.setAdapter(adapter);
-
-        list.post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.notifyDataSetChanged();
-                setListCurrentPosition(database.curMultimedia());
-            }
-        });
-
-
     }
 
-    private void updateMultimedias() {
+    private void updateMultimediaList() {
         ListViewValueArr.clear();
 
-        Multimedia[] multimedias = database.getMultimedias();
-        for (Multimedia multimedia : multimedias) {
+        Multimedia[] multimedia_list = database.getMultimediaList();
+        for (Multimedia multimedia : multimedia_list) {
             ListViewValueArr.add(multimedia);
         }
 
-        adapter.notifyDataSetChanged();
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
-    private void setListCurrentPosition(int current_position) {
+    private void setCurrentMultimedia() {
+        CurrentMultimedia current = database.getCurrentMultimedia();
+        if (current == null)
+            return;
+
+        adapter.setCurrentMultimedia(current);
+
         int height = list.getHeight();
         int itemHeight = list.getChildAt(0).getHeight();
-        Log.d(TAG, "First Visible Position =" +list.getFirstVisiblePosition());
-        Log.d(TAG, "Last Visible Position =" +list.getLastVisiblePosition());
-        Log.d(TAG, "height =" +height);
-        list.setSelectionFromTop(current_position, height/2 - itemHeight/2);
+        list.setSelectionFromTop(current.getPosition(), height/2 - itemHeight/2);
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     @Override
