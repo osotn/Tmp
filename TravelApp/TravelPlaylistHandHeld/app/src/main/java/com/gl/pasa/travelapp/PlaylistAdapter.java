@@ -3,6 +3,7 @@ package com.gl.pasa.travelapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public class PlaylistAdapter extends BaseAdapter {
     private ArrayList data;
     private static LayoutInflater inflater = null;
     public Resources res;
+    private CurrentMultimedia curMultimedia;
 
     public PlaylistAdapter(Activity activity, ArrayList data, Resources res) {
         this.activity = activity;
@@ -88,9 +90,21 @@ public class PlaylistAdapter extends BaseAdapter {
         } else {
             Multimedia multimedia = (Multimedia) data.get(position);
 
+            holder.list_item.setBackgroundColor(Color.WHITE);
             holder.text_song.setText(multimedia.getSong());
             holder.text_artist.setText(multimedia.getArtist());
+
+            if (curMultimedia != null) {
+                if (position <= (curMultimedia.getPosition() - 1)) {
+                    holder.list_item.setBackgroundResource(R.color.colorGrey_background);
+                }
+            }
         }
         return vi;
+    }
+
+    public void setCurrentMultimedia (CurrentMultimedia currentMultimedia) {
+        Log.d(TAG, "set current multimedia position = " + currentMultimedia.getPosition());
+        this.curMultimedia = currentMultimedia;
     }
 }

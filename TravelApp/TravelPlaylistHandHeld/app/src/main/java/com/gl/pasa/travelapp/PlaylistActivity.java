@@ -38,19 +38,19 @@ public class PlaylistActivity extends AppCompatActivity {
             @Override
             public void onDataChanged() {
                 Log.d(TAG, "Current Multimedia has changed");
-
+                onChangedCurrentMultimedia();
             }
         });
         travel.setMultimediaListChangeEvent(new DatabaseChangeEvent() {
             @Override
             public void onDataChanged() {
                 Log.d(TAG, "Multimedia List has changed");
-                changedMultimediaList();
+                onChangedMultimediaList();
             }
         });
     }
 
-    private void changedMultimediaList() {
+    private void onChangedMultimediaList() {
         ListViewValueArr.clear();
 
         Multimedia[] multimedia_list = travel.getMultimediaList();
@@ -61,5 +61,34 @@ public class PlaylistActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
+
+        // Here also need to update current multimedia position
+        onChangedCurrentMultimedia();
+    }
+
+    public void onChangedCurrentMultimedia() {
+        CurrentMultimedia currentMultimedia = travel.getCurrentMultimedia();
+        if (currentMultimedia == null)
+            return;
+
+        // To wait list updating use post method
+        list.post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+                CurrentMultimedia currentMultimedia = travel.getCurrentMultimedia();
+
+                adapter.setCurrentMultimedia(currentMultimedia);
+
+                // Set current multimedia position in middle of ListView
+                int height = list.getHeight();
+                int itemHeight = list.getChildAt(0).getHeight();
+                int top = height / 2 - itemHeight / 2;
+                int pos = currentMultimedia.getPosition();
+                Log.d(TAG, "Set list position = " + pos + " in top = " + top);
+                list.setSelectionFromTop(pos, top);
+                list.invalidate();
+            }
+        });
     }
 }
