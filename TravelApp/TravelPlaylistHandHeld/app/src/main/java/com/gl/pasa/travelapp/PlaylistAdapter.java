@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -46,7 +48,14 @@ public class PlaylistAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        public TextView text;
+        public TextView text_error; // Used if list is empty.
+        public LinearLayout list_item;
+        public ImageView image_type;
+        public ImageView image_state;
+        public TextView text_song;
+        public TextView text_artist;
+        public TextView text_time;
+        public View gradient_pad;
     }
 
     @Override
@@ -58,7 +67,14 @@ public class PlaylistAdapter extends BaseAdapter {
             vi = inflater.inflate(R.layout.item_playlist_hand_held, parent, false);
 
             holder = new ViewHolder();
-            holder.text = (TextView) vi.findViewById(R.id.text);
+            holder.text_error = (TextView) vi.findViewById(R.id.text_song);
+            holder.list_item = (LinearLayout) vi.findViewById(R.id.list_item);
+            holder.image_type = (ImageView) vi.findViewById(R.id.image_type);
+            holder.image_state = (ImageView) vi.findViewById(R.id.image_state);
+            holder.text_song = (TextView) vi.findViewById(R.id.text_song);
+            holder.text_artist = (TextView) vi.findViewById(R.id.text_artist);
+            holder.text_time = (TextView) vi.findViewById(R.id.text_time);
+            holder.gradient_pad = vi.findViewById(R.id.gradient_pad);
 
             vi.setTag( holder );
         } else {
@@ -68,10 +84,12 @@ public class PlaylistAdapter extends BaseAdapter {
         Log.v(TAG, "getView() position = " + position);
 
         if (data.size() <= 0) {
-            holder.text.setText("No Data");
+            holder.text_error.setText("No Data");
         } else {
-            // TODO
-            holder.text.setText("TODO: Some data");
+            Multimedia multimedia = (Multimedia) data.get(position);
+
+            holder.text_song.setText(multimedia.getSong());
+            holder.text_artist.setText(multimedia.getArtist());
         }
         return vi;
     }

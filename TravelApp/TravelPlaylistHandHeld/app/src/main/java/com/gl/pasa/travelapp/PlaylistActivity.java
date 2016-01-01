@@ -17,7 +17,7 @@ public class PlaylistActivity extends AppCompatActivity {
 
     private ListView list;
     private PlaylistAdapter adapter;
-    private ArrayList<String> ListViewValueArr = new ArrayList<String>();
+    private ArrayList<Multimedia> ListViewValueArr = new ArrayList<Multimedia>();
 
 
     @Override
@@ -38,13 +38,28 @@ public class PlaylistActivity extends AppCompatActivity {
             @Override
             public void onDataChanged() {
                 Log.d(TAG, "Current Multimedia has changed");
+
             }
         });
         travel.setMultimediaListChangeEvent(new DatabaseChangeEvent() {
             @Override
             public void onDataChanged() {
                 Log.d(TAG, "Multimedia List has changed");
+                changedMultimediaList();
             }
         });
+    }
+
+    private void changedMultimediaList() {
+        ListViewValueArr.clear();
+
+        Multimedia[] multimedia_list = travel.getMultimediaList();
+        if (multimedia_list != null) {
+            for (Multimedia multimedia : multimedia_list) {
+                ListViewValueArr.add(multimedia);
+            }
+        }
+
+        adapter.notifyDataSetChanged();
     }
 }
