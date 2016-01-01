@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorGrey54_active">#767676</color>
+    <color name="colorGrey26_inactive">#B3B3B3</color>
     <color name="colorGrey_background">#DCDCDC</color>
     <color name="colorCyan_text">#03a9f4</color>
 

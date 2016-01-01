@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,13 @@ import java.util.ArrayList;
 public class PlaylistAdapter extends BaseAdapter {
 
     private final String TAG = "PlaylistAdapter";
+
+    private final String ICON_AUDIOTRACK = "com.gl.pasa.travelapp:drawable/ic_image_audiotrack_grey_54_active_36dp";
+    private final String ICON_MOVIE      = "com.gl.pasa.travelapp:drawable/ic_av_movie_grey_54_active_36dp";
+    private final String ICON_EQUALIZER  = "com.gl.pasa.travelapp:drawable/ic_av_equalizer_cyan_36dp";
+    private final String GRADIENT_PAD    = "com.gl.pasa.travelapp:drawable/gradient_drawable_grey";
+
+
     private Activity activity;
     private ArrayList data;
     private static LayoutInflater inflater = null;
@@ -92,20 +98,29 @@ public class PlaylistAdapter extends BaseAdapter {
             Multimedia multimedia = (Multimedia) data.get(position);
 
             holder.list_item.setBackgroundColor(Color.WHITE);
+            holder.image_type.setImageResource(
+                    getResId((multimedia.getType() == Multimedia.MultimediaType.MUSIC) ? ICON_AUDIOTRACK : ICON_MOVIE));
             holder.image_state.setVisibility(View.GONE);
             holder.text_song.setText(multimedia.getSong());
             holder.text_song.setTextColor(Color.BLACK);
             holder.text_artist.setText(multimedia.getArtist());
             holder.text_artist.setTextColor(res.getColor(R.color.colorGrey54_active));
             holder.text_time.setText(secToString(multimedia.getDuration_sec()));
+            holder.gradient_pad.setBackgroundColor(Color.WHITE);
 
             if (curMultimedia != null) {
                 if (position < curMultimedia.getPosition()) {
                     holder.list_item.setBackgroundResource(R.color.colorGrey_background);
+                    holder.gradient_pad.setBackgroundResource(R.color.colorGrey_background);
+                }
+
+                if (position == (curMultimedia.getPosition() - 1)) {
+                    holder.gradient_pad.setBackgroundResource(getResId(GRADIENT_PAD));
                 }
 
                 if (position == curMultimedia.getPosition()) {
                     holder.image_state.setVisibility(View.VISIBLE);
+                    holder.image_state.setImageResource(getResId(ICON_EQUALIZER));
                     holder.text_song.setTextColor(res.getColor(R.color.colorCyan_text));
                     holder.text_artist.setTextColor(res.getColor(R.color.colorCyan_text));
                     holder.text_time.setText("-" + secToString(curMultimedia.getRemain_sec()));
@@ -122,5 +137,9 @@ public class PlaylistAdapter extends BaseAdapter {
 
     private String secToString(int sec) {
         return String.format("%d:%02d", sec / 60, sec % 60);
+    }
+
+    private int getResId(String name) {
+        return res.getIdentifier(name, null, null);
     }
 }
