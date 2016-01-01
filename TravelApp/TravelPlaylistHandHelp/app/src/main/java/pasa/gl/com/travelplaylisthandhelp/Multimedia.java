@@ -7,52 +7,62 @@ import java.net.URI;
  * Created by oleksandr.v.sotnikov on 12/28/2015.
  */
 public class Multimedia {
+    // Must be "JavaBean" class.
+    private String uri;
+    private int duration_sec;
+    // TODO Only for For music.
+    private String song;
+    private String artist;
+    // TODO For moview - title, sessons ?
     public enum MultimediaType {
         UNKNOWN,
         MUSIC,
         MOVIE,
         LINK
     }
+    private MultimediaType type;
 
-    private MultimediaType mType;
-    private URI mUri;
-    private int mDuration_sec;
-    // TODO Only for For music.
-    private String mSong;
-    private String mArtist;
-    // TODO For moview - title, sessons ?
+    // No-arg constructor
+    public Multimedia() {}
 
-
-    public Multimedia() {
-        mType = MultimediaType.UNKNOWN;
+    public Multimedia(MultimediaType type, String uri, int duration_sec, String song,
+                      String artist) {
+        this.type = type;
+        this.uri = uri;
+        this.duration_sec = duration_sec;
+        this.song = song;
+        this.artist = artist;
     }
 
-    public Multimedia(MultimediaType type, URI uri, int duration_sec, String song, String artist) {
-        mType = type;
-        mUri = uri;
-        mDuration_sec = duration_sec;
-        mSong = song;
-        mArtist = artist;
-    }
-
+    // Get()/set() for all class data
     public MultimediaType getType() {
-        return mType;
+        return type;
     }
-
-    public URI getUri() {
-        return mUri;
+    public void setType(MultimediaType type) {
+        this.type = type;
     }
-
-    public int getDuration() {
-        return mDuration_sec;
+    public String getUri() {
+        return uri;
     }
-
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+    public int getDuration_sec() {
+        return duration_sec;
+    }
+    public void setDuration_sec(int duration_sec) {
+        this.duration_sec = duration_sec;
+    }
     public String getSong() {
-        return mSong;
+        return song;
     }
-
+    public void setSong(String song) {
+        this.song = song;
+    }
     public String getArtist() {
-        return mArtist;
+        return artist;
     }
-
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
 }

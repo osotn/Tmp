@@ -86,7 +86,7 @@ public class PlaylistAdapter extends BaseAdapter {
             holder = (ViewHolder) vi.getTag();
         }
 
-        Log.d(TAG, "getView() position="+position);
+        Log.v(TAG, "getView() position="+position);
 
         if (data.size() <= 0) {
             holder.text.setText("No Data");
@@ -106,23 +106,23 @@ public class PlaylistAdapter extends BaseAdapter {
             int remain_sec = 0;
             if (curMultimedia != null) {
                 current_position = curMultimedia.getPosition();
-                remain_sec = curMultimedia.getRemain();
+                remain_sec = curMultimedia.getRemain_sec();
             }
 
             if (position <= (current_position-1)) {
 
-                Log.d(TAG, "getView() set grey");
+                Log.v(TAG, "getView() set grey");
                 holder.list_item.setBackgroundColor(0xFFD3D3D3);
                 holder.gradient_pad.setBackgroundColor(0xFFD3D3D3);
 
                 if (position == (curMultimedia.getPosition()-1)) {
-                    Log.d(TAG, "getView() set gradient");
+                    Log.v(TAG, "getView() set gradient");
                     holder.gradient_pad.setBackgroundResource(res.getIdentifier(
                             "pasa.gl.com.travelplaylisthandhelp:drawable/gradient_drawable_grey", null, null));
                 }
 
             } else {
-                Log.d(TAG, "getView() set white");
+                Log.v(TAG, "getView() set white");
                 holder.list_item.setBackgroundColor(0xFFFFFFFF);
                 holder.gradient_pad.setBackgroundColor(0xFFFFFFFF);
             }
@@ -141,8 +141,8 @@ public class PlaylistAdapter extends BaseAdapter {
                 holder.text1.setTextColor(0xFF767676);
                 holder.image2.setVisibility(View.GONE);
 
-                String s = String.format("%d:%02d", tempValues.getDuration() / 60,
-                        tempValues.getDuration() % 60);
+                String s = String.format("%d:%02d", tempValues.getDuration_sec() / 60,
+                        tempValues.getDuration_sec() % 60);
                 holder.text2.setText(s);
             }
 

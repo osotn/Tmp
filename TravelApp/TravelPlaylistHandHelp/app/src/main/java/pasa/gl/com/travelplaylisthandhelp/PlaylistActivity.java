@@ -15,7 +15,7 @@ import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
 
-public class PlaylistActivity extends AppCompatActivity {
+public class PlaylistActivity extends AppCompatActivity implements DatabaseEvents {
 
     private final String TAG = "PlaylistActivity";
 
@@ -43,6 +43,7 @@ public class PlaylistActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                onCurrentMultimediaChanged();
 
             }
         });
@@ -50,13 +51,15 @@ public class PlaylistActivity extends AppCompatActivity {
         // Our code
         Firebase.setAndroidContext(this);
         database = new Database();
+        database.setEvents(this);
 
         list = (ListView) findViewById(R.id.list);
         adapter = new PlaylistAdapter(this, ListViewValueArr, getResources());
         list.setAdapter(adapter);
     }
 
-    private void updateMultimediaList() {
+    @Override
+    public void onMultimediaChanged() {
         ListViewValueArr.clear();
 
         Multimedia[] multimedia_list = database.getMultimediaList();
@@ -66,20 +69,35 @@ public class PlaylistActivity extends AppCompatActivity {
 
         if (adapter != null)
             adapter.notifyDataSetChanged();
+
+        onCurrentMultimediaChanged();
     }
 
-    private void setCurrentMultimedia() {
+    @Override
+    public void onCurrentMultimediaChanged() {
         CurrentMultimedia current = database.getCurrentMultimedia();
         if (current == null)
             return;
+        list.post(new Runnable() {
+            @Override
+            public void run() {
+                if (adapter != null)
+                    adapter.notifyDataSetChanged();
 
-        adapter.setCurrentMultimedia(current);
 
-        int height = list.getHeight();
-        int itemHeight = list.getChildAt(0).getHeight();
-        list.setSelectionFromTop(current.getPosition(), height/2 - itemHeight/2);
-        if (adapter != null)
-            adapter.notifyDataSetChanged();
+                CurrentMultimedia current = database.getCurrentMultimedia();
+                adapter.setCurrentMultimedia(current);
+
+                int height = list.getHeight();
+                int itemHeight = list.getChildAt(0).getHeight();
+                int top = height / 2 - itemHeight / 2;
+                int pos = current.getPosition();
+                Log.d(TAG, "Set pos = " + pos + " top = " + top);
+                list.setSelectionFromTop(pos, top);
+                list.invalidate();
+
+            }
+        });
     }
 
     @Override

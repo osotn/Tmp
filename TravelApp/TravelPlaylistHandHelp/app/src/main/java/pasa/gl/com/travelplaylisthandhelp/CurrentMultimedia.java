@@ -5,20 +5,29 @@ package pasa.gl.com.travelplaylisthandhelp;
  * Created by oleksandr.v.sotnikov on 12/28/2015.
  */
 public class CurrentMultimedia {
-    private Long position;
-    private Long remain;
+    // Must be "JavaBean" class.
+    private int position;
+    private int remain_sec;
 
-    public CurrentMultimedia(int pos, int sec) {
-        position = new Long(pos);
-        remain = new Long(sec);
+    // No-arg constructor
+    public CurrentMultimedia() {}
+
+    public CurrentMultimedia(int position, int remain_sec) {
+        this.position = position;
+        this.remain_sec = remain_sec;
     }
 
+    // Get()/set() for all class data
     public int getPosition() {
-        return position.intValue();
+        return position;
     }
-
-    public int getRemain() {
-        return remain.intValue();
+    public void setPosition(int position) {
+        this.position = position;
+    }
+    public int getRemain_sec() {
+        return remain_sec;
+    }
+    public void setRemain_sec(int remain_sec) {
+        this.remain_sec = remain_sec;
     }
 }
-
