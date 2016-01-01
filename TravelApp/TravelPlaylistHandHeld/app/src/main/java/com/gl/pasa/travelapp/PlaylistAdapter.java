@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,7 @@ public class PlaylistAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        public TextView text_error; // Used if list is empty.
+        public TextView text_error;
         public LinearLayout list_item;
         public ImageView image_type;
         public ImageView image_state;
@@ -69,7 +70,7 @@ public class PlaylistAdapter extends BaseAdapter {
             vi = inflater.inflate(R.layout.item_playlist_hand_held, parent, false);
 
             holder = new ViewHolder();
-            holder.text_error = (TextView) vi.findViewById(R.id.text_song);
+            holder.text_error = (TextView) vi.findViewById(R.id.text_song);// Used as error view.
             holder.list_item = (LinearLayout) vi.findViewById(R.id.list_item);
             holder.image_type = (ImageView) vi.findViewById(R.id.image_type);
             holder.image_state = (ImageView) vi.findViewById(R.id.image_state);
@@ -91,12 +92,23 @@ public class PlaylistAdapter extends BaseAdapter {
             Multimedia multimedia = (Multimedia) data.get(position);
 
             holder.list_item.setBackgroundColor(Color.WHITE);
+            holder.image_state.setVisibility(View.GONE);
             holder.text_song.setText(multimedia.getSong());
+            holder.text_song.setTextColor(Color.BLACK);
             holder.text_artist.setText(multimedia.getArtist());
+            holder.text_artist.setTextColor(res.getColor(R.color.colorGrey54_active));
+            holder.text_time.setText(secToString(multimedia.getDuration_sec()));
 
             if (curMultimedia != null) {
-                if (position <= (curMultimedia.getPosition() - 1)) {
+                if (position < curMultimedia.getPosition()) {
                     holder.list_item.setBackgroundResource(R.color.colorGrey_background);
+                }
+
+                if (position == curMultimedia.getPosition()) {
+                    holder.image_state.setVisibility(View.VISIBLE);
+                    holder.text_song.setTextColor(res.getColor(R.color.colorCyan_text));
+                    holder.text_artist.setTextColor(res.getColor(R.color.colorCyan_text));
+                    holder.text_time.setText("-" + secToString(curMultimedia.getRemain_sec()));
                 }
             }
         }
@@ -106,5 +118,9 @@ public class PlaylistAdapter extends BaseAdapter {
     public void setCurrentMultimedia (CurrentMultimedia currentMultimedia) {
         Log.d(TAG, "set current multimedia position = " + currentMultimedia.getPosition());
         this.curMultimedia = currentMultimedia;
+    }
+
+    private String secToString(int sec) {
+        return String.format("%d:%02d", sec / 60, sec % 60);
     }
 }
