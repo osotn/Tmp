@@ -2,6 +2,7 @@ package com.gl.pasa.travelapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.firebase.client.Firebase;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 public class PlaylistActivity extends AppCompatActivity {
 
     private final String TAG = "PlaylistActivity";
+
+    private Travel travel;
 
     private ListView list;
     private PlaylistAdapter adapter;
@@ -22,11 +25,26 @@ public class PlaylistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_hand_held);
 
-        // Firebase: need to add it for every Activity.
+        // Firebase: Add it for every Activity.
         Firebase.setAndroidContext(this);
 
         list = (ListView) findViewById(R.id.list);
         adapter = new PlaylistAdapter(this, ListViewValueArr, getResources());
         list.setAdapter(adapter);
+
+        travel = Database.getInstance().getTravel();
+
+        travel.setCurrentMultimediaChangeEvent(new DatabaseChangeEvent() {
+            @Override
+            public void onDataChanged() {
+                Log.d(TAG, "Current Multimedia has changed");
+            }
+        });
+        travel.setMultimediaListChangeEvent(new DatabaseChangeEvent() {
+            @Override
+            public void onDataChanged() {
+                Log.d(TAG, "Multimedia List has changed");
+            }
+        });
     }
 }
