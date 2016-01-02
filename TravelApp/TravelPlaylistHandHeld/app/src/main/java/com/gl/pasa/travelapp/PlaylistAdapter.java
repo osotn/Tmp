@@ -27,12 +27,12 @@ public class PlaylistAdapter extends BaseAdapter {
     private final String ICON_EQUALIZER  = "com.gl.pasa.travelapp:drawable/ic_av_equalizer_cyan_36dp";
     private final String GRADIENT_PAD    = "com.gl.pasa.travelapp:drawable/gradient_drawable_grey";
 
+    private static LayoutInflater inflater = null;
 
     private Activity activity;
     private ArrayList data;
-    private static LayoutInflater inflater = null;
-    public Resources res;
-    private CurrentMultimedia curMultimedia;
+    private Resources res;
+    private CurrentMultimedia currentMultimedia;
 
     public PlaylistAdapter(Activity activity, ArrayList data, Resources res) {
         this.activity = activity;
@@ -42,16 +42,19 @@ public class PlaylistAdapter extends BaseAdapter {
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    @Override
     public int getCount() {
         if (data.size() <= 0)
             return 1;
         return data.size();
     }
 
+    @Override
     public Object getItem(int position) {
         return position;
     }
 
+    @Override
     public long getItemId(int position) {
         return position;
     }
@@ -73,6 +76,8 @@ public class PlaylistAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
+
+            // TODO There we can select view for HandHeld or HeadUnit
             vi = inflater.inflate(R.layout.item_playlist_hand_held, parent, false);
 
             holder = new ViewHolder();
@@ -108,22 +113,24 @@ public class PlaylistAdapter extends BaseAdapter {
             holder.text_time.setText(secToString(multimedia.getDuration_sec()));
             holder.gradient_pad.setBackgroundColor(Color.WHITE);
 
-            if (curMultimedia != null) {
-                if (position < curMultimedia.getPosition()) {
+            if (currentMultimedia != null) {
+                int currentPosition = currentMultimedia.getPosition();
+
+                if (position < currentPosition) {
                     holder.list_item.setBackgroundResource(R.color.colorGrey_background);
                     holder.gradient_pad.setBackgroundResource(R.color.colorGrey_background);
                 }
 
-                if (position == (curMultimedia.getPosition() - 1)) {
+                if (position == (currentPosition - 1)) {
                     holder.gradient_pad.setBackgroundResource(getResId(GRADIENT_PAD));
                 }
 
-                if (position == curMultimedia.getPosition()) {
+                if (position == currentPosition) {
                     holder.image_state.setVisibility(View.VISIBLE);
                     holder.image_state.setImageResource(getResId(ICON_EQUALIZER));
                     holder.text_song.setTextColor(res.getColor(R.color.colorCyan_text));
                     holder.text_artist.setTextColor(res.getColor(R.color.colorCyan_text));
-                    holder.text_time.setText("-" + secToString(curMultimedia.getRemain_sec()));
+                    holder.text_time.setText("-" + secToString(currentMultimedia.getRemain_sec()));
                 }
             }
         }
@@ -131,8 +138,8 @@ public class PlaylistAdapter extends BaseAdapter {
     }
 
     public void setCurrentMultimedia (CurrentMultimedia currentMultimedia) {
-        Log.d(TAG, "set current multimedia position = " + currentMultimedia.getPosition());
-        this.curMultimedia = currentMultimedia;
+        Log.d(TAG, "current multimedia position = " + currentMultimedia.getPosition());
+        this.currentMultimedia = currentMultimedia;
     }
 
     private String secToString(int sec) {

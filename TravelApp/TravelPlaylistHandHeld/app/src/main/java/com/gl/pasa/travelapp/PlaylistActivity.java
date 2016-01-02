@@ -14,11 +14,9 @@ public class PlaylistActivity extends AppCompatActivity {
     private final String TAG = "PlaylistActivity";
 
     private Travel travel;
-
     private ListView list;
     private PlaylistAdapter adapter;
     private ArrayList<Multimedia> ListViewValueArr = new ArrayList<Multimedia>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +31,6 @@ public class PlaylistActivity extends AppCompatActivity {
         list.setAdapter(adapter);
 
         travel = Database.getInstance().getTravel();
-
         travel.setCurrentMultimediaChangeEvent(new DatabaseChangeEvent() {
             @Override
             public void onDataChanged() {
@@ -52,14 +49,12 @@ public class PlaylistActivity extends AppCompatActivity {
 
     private void onChangedMultimediaList() {
         ListViewValueArr.clear();
-
         Multimedia[] multimedia_list = travel.getMultimediaList();
         if (multimedia_list != null) {
             for (Multimedia multimedia : multimedia_list) {
                 ListViewValueArr.add(multimedia);
             }
         }
-
         adapter.notifyDataSetChanged();
 
         // Here also need to update current multimedia position
@@ -71,22 +66,19 @@ public class PlaylistActivity extends AppCompatActivity {
         if (currentMultimedia == null)
             return;
 
-        // To wait list updating use post method
+        // Wait when list will update
         list.post(new Runnable() {
             @Override
             public void run() {
                 adapter.notifyDataSetChanged();
                 CurrentMultimedia currentMultimedia = travel.getCurrentMultimedia();
-
                 adapter.setCurrentMultimedia(currentMultimedia);
 
                 // Set current multimedia position in middle of ListView
-                int height = list.getHeight();
-                int itemHeight = list.getChildAt(0).getHeight();
-                int top = height / 2 - itemHeight / 2;
-                int pos = currentMultimedia.getPosition();
-                Log.d(TAG, "Set list position = " + pos + " in top = " + top);
-                list.setSelectionFromTop(pos, top);
+                int top = list.getHeight() / 2 - list.getChildAt(0).getHeight() / 2;
+                int position = currentMultimedia.getPosition();
+                Log.d(TAG, "Set list position = " + position + " in top = " + top);
+                list.setSelectionFromTop(position, top);
                 list.invalidate();
             }
         });

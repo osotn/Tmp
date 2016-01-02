@@ -25,7 +25,7 @@ public class Database {
 
     // TEST simple version, only one travel.
     public Travel getTravel() {
-        // TEST This Travel has created yet.
+        // TEST This Travel must have created yet.
         Travel travel = new Travel("TestTravel", firebase.child("Travels"));
         return travel;
     }
